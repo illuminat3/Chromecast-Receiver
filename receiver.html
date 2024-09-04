@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>URL Receiver</title>
+    <script type="text/javascript">
+      window.onload = function () {
+        const castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+        console.log('Starting Receiver Manager');
+
+        castReceiverManager.onReady = function (event) {
+          console.log('Received Ready event: ' + JSON.stringify(event.data));
+          castReceiverManager.setApplicationState("Application is ready");
+        };
+
+        castReceiverManager.onMessage = function (event) {
+          console.log('Received message: ' + event.data);
+          const message = JSON.parse(event.data);
+
+          if (message.type === "URL") {
+            console.log('Casting URL: ' + message.url);
+            document.getElementById('content').src = message.url;
+          }
+        };
+
+        castReceiverManager.start();
+      };
+    </script>
+  </head>
+  <body>
+    <iframe id="content" width="100%" height="100%" frameborder="0"></iframe>
+  </body>
+</html>
